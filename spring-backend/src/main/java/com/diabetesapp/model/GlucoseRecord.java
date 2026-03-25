@@ -1,0 +1,50 @@
+package com.diabetesapp.model;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "glucose_records")
+@Data
+@NoArgsConstructor
+public class GlucoseRecord {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotNull
+    @Min(value = 10, message = "Glucose value must be at least 10 mg/dL")
+    @Max(value = 600, message = "Glucose value must be at most 600 mg/dL")
+    private Integer value;
+
+    @NotNull
+    private LocalDateTime recordedAt;
+
+    @Enumerated(EnumType.STRING)
+    private MealContext mealContext;
+
+    @Size(max = 500)
+    private String note;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    public enum MealContext {
+        FASTING, BEFORE_MEAL, AFTER_MEAL
+    }
+
+    /**Derived status based on clinical thresholds */
+    @Transient
+    public GlucoseStatus getStatus() {
+        if (value < 70) return GlucoseStatus.LOW;
+        if (value <= 140) return GlucoseStatus.NORMAL;
+        return GlucoseStatus.HIGH;
+    }
+
+    public enum GlucoseStatus { LOW, NORMAL, HIGH }
+}
