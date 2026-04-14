@@ -109,6 +109,7 @@ async function scrollToBottom() {
   }
 }
 
+
 async function handleSend() {
   if (!inputValue.value.trim()) return
 
@@ -119,20 +120,62 @@ async function handleSend() {
     timestamp: new Date(),
   })
 
+  const userMessage = inputValue.value
   inputValue.value = ''
   await scrollToBottom()
   isTyping.value = true
 
-  // Calls Python AI service via Spring Boot proxy at /api/chat
-  setTimeout(async () => {
-    isTyping.value = false
+  try {
+    const response = await fetch('/api/users/1/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: userMessage }),
+    })
+
+    const data = await response.json()
+
     messages.value.push({
       id: (Date.now() + 1).toString(),
-      text: 'I understand your question about diabetes management. While I can provide general information, please consult with your healthcare provider for personalized medical advice.',
+      text: data.reply,
       sender: 'bot',
       timestamp: new Date(),
     })
+  } catch (error) {
+    messages.value.push({
+      id: (Date.now() + 1).toString(),
+      text: 'Sorry I am unable to connect right now. Please try again later.',
+      sender: 'bot',
+      timestamp: new Date(),
+    })
+  } finally {
+    isTyping.value = false
     await scrollToBottom()
-  }, 1200)
+  }
 }
+// async function handleSend() {
+//   if (!inputValue.value.trim()) return
+
+//   messages.value.push({
+//     id: Date.now().toString(),
+//     text: inputValue.value,
+//     sender: 'user',
+//     timestamp: new Date(),
+//   })
+
+//   inputValue.value = ''
+//   await scrollToBottom()
+//   isTyping.value = true
+
+//   // Calls Python AI service via Spring Boot proxy at /api/chat
+//   setTimeout(async () => {
+//     isTyping.value = false
+//     messages.value.push({
+//       id: (Date.now() + 1).toString(),
+//       text: 'I understand your question about diabetes management. While I can provide general information, please consult with your healthcare provider for personalized medical advice.',
+//       sender: 'bot',
+//       timestamp: new Date(),
+//     })
+//     await scrollToBottom()
+//   }, 1200)
+// }
 </script>

@@ -7,6 +7,11 @@
         <p class="text-sm text-muted-foreground">Track and monitor your glucose readings</p>
       </div>
 
+      <!-- Error Banner -->
+      <div v-if="glucose.error" class="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+        {{ glucose.error }}
+      </div>
+
       <!-- Add Reading -->
       <button @click="showAddModal = true" class="btn-primary w-full flex items-center justify-center gap-2 py-3">
         <PlusIcon class="size-4" />
@@ -17,12 +22,12 @@
       <div class="grid grid-cols-3 gap-3">
         <div class="card shadow-sm p-3 text-center">
           <div class="text-xs text-muted-foreground mb-1">Today</div>
-          <div class="text-xl font-medium text-foreground">{{ glucose.avgToday }}</div>
+          <div class="text-xl font-medium text-foreground">{{ glucose.avgToday || '—' }}</div>
           <div class="text-xs text-muted-foreground">avg</div>
         </div>
         <div class="card shadow-sm p-3 text-center">
           <div class="text-xs text-muted-foreground mb-1">This Week</div>
-          <div class="text-xl font-medium text-foreground">{{ glucose.avgWeek }}</div>
+          <div class="text-xl font-medium text-foreground">{{ glucose.avgWeek || '—' }}</div>
           <div class="text-xs text-muted-foreground">avg</div>
         </div>
         <div class="card shadow-sm p-3 text-center">
@@ -48,8 +53,17 @@
           </button>
         </div>
 
+        <!-- Loading -->
+        <div v-if="glucose.loading" class="text-center py-10 text-muted-foreground text-sm">
+          Loading records...
+        </div>
+
         <!-- Records -->
-        <div class="space-y-3 mt-4">
+        <div v-else class="space-y-3 mt-4">
+          <div v-if="filteredRecords.length === 0" class="text-center py-10 text-muted-foreground text-sm">
+            No records found.
+          </div>
+
           <div
             v-for="(record, index) in filteredRecords"
             :key="record.id"
@@ -70,7 +84,7 @@
                   </div>
                   <div class="flex items-center gap-2 text-xs text-muted-foreground">
                     <CalendarIcon class="size-3" />
-                    <span>{{ record.date }} • {{ record.time }}</span>
+                    <span>{{ glucose.formatDate(record.recordedAt) }} • {{ glucose.formatTime(record.recordedAt) }}</span>
                   </div>
                 </div>
               </div>
@@ -86,12 +100,6 @@
             <div v-if="record.note" class="mt-3 p-2 bg-muted/50 rounded-md">
               <p class="text-xs text-muted-foreground">{{ record.note }}</p>
             </div>
-          </div>
-
-          <!-- Weekly summary placeholder -->
-          <div v-if="activeTab === 'week'" class="card shadow-sm p-4">
-            <h4 class="font-medium text-foreground">Weekly Summary</h4>
-            <p class="text-sm text-muted-foreground mt-1">Detailed weekly analytics — coming soon.</p>
           </div>
         </div>
       </div>
@@ -120,7 +128,9 @@
           </div>
         </div>
         <div class="flex gap-3">
-          <button @click="saveReading" class="btn-primary flex-1 py-2.5">Save Reading</button>
+          <button @click="saveReading" :disabled="glucose.loading" class="btn-primary flex-1 py-2.5">
+            {{ glucose.loading ? 'Saving...' : 'Save Reading' }}
+          </button>
           <button @click="showAddModal = false" class="flex-1 py-2.5 border border-border rounded-lg text-sm hover:bg-muted transition-colors">Cancel</button>
         </div>
       </div>
@@ -129,7 +139,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useGlucoseStore } from '../stores/glucose'
 import {
   Activity as ActivityIcon,
@@ -143,17 +153,15 @@ import {
 const glucose = useGlucoseStore()
 const activeTab = ref('all')
 const showAddModal = ref(false)
-const newReading = ref({ value: 0, mealContext: 'fasting' as 'fasting' | 'before' | 'after', note: '' })
+const newReading = ref({ value: 0, mealContext: 'fasting', note: '' })
 
 const tabs = [
   { key: 'all', label: 'All' },
   { key: 'today', label: 'Today' },
-  { key: 'week', label: 'This Week' },
 ]
 
 const filteredRecords = computed(() => {
-  if (activeTab.value === 'today') return glucose.records.filter(r => r.date === 'Today')
-  if (activeTab.value === 'week') return []
+  if (activeTab.value === 'today') return glucose.todayRecords
   return glucose.records
 })
 
@@ -164,16 +172,21 @@ function trendIcon(value: number, prev?: number) {
   return MinusIcon
 }
 
-function saveReading() {
+async function saveReading() {
   if (!newReading.value.value) return
-  glucose.addRecord({
+  await glucose.addRecord({
     value: newReading.value.value,
     mealContext: newReading.value.mealContext,
     note: newReading.value.note || undefined,
-    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    date: 'Today',
   })
-  newReading.value = { value: 0, mealContext: 'fasting', note: '' }
-  showAddModal.value = false
+  if (!glucose.error) {
+    newReading.value = { value: 0, mealContext: 'fasting', note: '' }
+    showAddModal.value = false
+  }
 }
+
+// Fetch records when the page loads
+onMounted(() => {
+  glucose.fetchRecords()
+})
 </script>
