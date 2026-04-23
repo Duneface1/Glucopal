@@ -1,0 +1,2 @@
+-- Baseline: existing tables already in production
+-- Flyway will skip this since baseline-on-migrate=true marks the DB at version 0
