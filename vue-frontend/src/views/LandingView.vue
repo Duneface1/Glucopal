@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-background flex flex-col">
 
-    <!-- Nav -->
+
     <nav class="max-w-md mx-auto w-full px-4 pt-6 flex items-center justify-between">
       <div class="flex items-center gap-2">
         <DropletsIcon class="size-5 text-primary" />
@@ -12,7 +12,6 @@
       </button>
     </nav>
 
-    <!-- Hero -->
     <main class="max-w-md mx-auto w-full px-4 flex flex-col flex-1 justify-center py-12 space-y-10">
 
       <div class="space-y-5">
@@ -31,7 +30,7 @@
         </p>
       </div>
 
-      <!-- Stats row -->
+
       <div class="grid grid-cols-3 gap-3">
         <div class="card p-4 text-center space-y-1">
           <div class="text-2xl font-bold text-primary">85%</div>
@@ -47,7 +46,6 @@
         </div>
       </div>
 
-      <!-- Feature list -->
       <div class="space-y-3">
         <div v-for="feature in features" :key="feature.label"
           class="flex items-center gap-3 p-3 card border-primary/10">
@@ -61,7 +59,6 @@
         </div>
       </div>
 
-      <!-- CTA -->
       <div class="space-y-3 pb-8">
         <button @click="$router.push('/signup')"
           class="btn-primary w-full py-4 text-base font-medium">

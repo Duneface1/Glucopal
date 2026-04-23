@@ -2,7 +2,6 @@
   <div class="min-h-screen bg-background flex flex-col">
     <div class="max-w-md mx-auto w-full px-4 flex flex-col flex-1 justify-center py-12 space-y-6">
 
-      <!-- Header -->
       <div class="space-y-1 text-center">
         <div class="flex justify-center mb-4">
           <div class="size-12 rounded-2xl bg-primary/10 flex items-center justify-center">
@@ -15,7 +14,7 @@
 
       <div class="space-y-5">
 
-        <!-- OAuth -->
+
         <div class="space-y-2">
           <button @click="auth.redirectToOAuth('google')"
             class="w-full flex items-center justify-center gap-3 py-3 px-4 card border border-border hover:bg-muted/50 transition-colors text-sm font-medium text-foreground">
@@ -24,14 +23,14 @@
           </button>
         </div>
 
-        <!-- Divider -->
+
         <div class="flex items-center gap-3">
           <div class="flex-1 h-px bg-border" />
           <span class="text-xs text-muted-foreground">or</span>
           <div class="flex-1 h-px bg-border" />
         </div>
 
-        <!-- Form -->
+
         <div class="space-y-3">
           <div class="grid grid-cols-2 gap-3">
             <div class="space-y-1.5">
@@ -63,7 +62,7 @@
                 <EyeIcon v-else class="size-4" />
               </button>
             </div>
-            <!-- Password strength -->
+
             <div v-if="password" class="flex gap-1 mt-1">
               <div v-for="i in 4" :key="i"
                 class="h-1 flex-1 rounded-full transition-colors"
@@ -72,7 +71,7 @@
             <p v-if="password" class="text-xs" :class="strengthTextColor">{{ strengthLabel }}</p>
           </div>
 
-          <!-- Diabetes type (relevant for a glucose app) -->
+
           <div class="space-y-1.5">
             <label class="text-sm font-medium text-foreground">Diabetes type <span class="text-muted-foreground font-normal">(optional)</span></label>
             <select v-model="diabetesType"
@@ -86,7 +85,6 @@
             </select>
           </div>
 
-          <!-- Error -->
           <p v-if="error" class="text-xs text-red-500 flex items-center gap-1.5">
             <AlertCircleIcon class="size-3.5 shrink-0" />
             {{ error }}

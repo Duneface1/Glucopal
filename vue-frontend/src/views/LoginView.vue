@@ -13,7 +13,6 @@
         <p class="text-sm text-muted-foreground">Sign in to your GlucoseTrack account</p>
       </div>
 
-      <!-- MFA screen (shown after password login if required) -->
       <div v-if="step === 'mfa'" class="space-y-5">
         <div class="card p-5 space-y-4">
           <div class="text-center space-y-1">
@@ -40,10 +39,8 @@
         </button>
       </div>
 
-      <!-- Main login form -->
       <div v-else class="space-y-5">
 
-        <!-- OAuth buttons -->
         <div class="space-y-2">
           <button @click="auth.redirectToOAuth('google')"
             class="w-full flex items-center justify-center gap-3 py-3 px-4 card border border-border hover:bg-muted/50 transition-colors text-sm font-medium text-foreground">
@@ -57,14 +54,12 @@
           </button>
         </div>
 
-        <!-- Divider -->
         <div class="flex items-center gap-3">
           <div class="flex-1 h-px bg-border" />
           <span class="text-xs text-muted-foreground">or</span>
           <div class="flex-1 h-px bg-border" />
         </div>
 
-        <!-- Email/password form -->
         <div class="space-y-3">
           <div class="space-y-1.5">
             <label class="text-sm font-medium text-foreground">Email</label>
@@ -97,7 +92,6 @@
             </div>
           </div>
 
-          <!-- Error -->
           <p v-if="error" class="text-xs text-red-500 flex items-center gap-1.5">
             <AlertCircleIcon class="size-3.5 shrink-0" />
             {{ error }}
