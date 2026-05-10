@@ -1,11 +1,16 @@
 import axios from 'axios'
 import type { AxiosError, InternalAxiosRequestConfig } from 'axios'
-import { useAuthStore } from '@/stores/auth'
 import router from '@/router'
 
 interface RetryableRequestConfig extends InternalAxiosRequestConfig {
   _retry?: boolean
 }
+
+function useAuthStore() {
+  const{ useAuthStore } = require('@/stores/auth')
+  return useAuthStore()
+}
+
 
 const instance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,

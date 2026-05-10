@@ -9,7 +9,7 @@
             {{ initials }}
           </div>
           <div>
-            <h3 class="text-sm font-medium text-foreground">{{ user.profile.name }}</h3>
+            <h3 class="text-sm font-medium text-foreground">{{ displayName }}</h3>
             <p class="text-xs text-muted-foreground">Managing well 💪</p>
           </div>
         </div>
@@ -27,7 +27,7 @@
             class="absolute right-0 top-full mt-1 w-48 bg-card border border-border rounded-lg shadow-lg z-20 py-1"
           >
             <button
-              @click="navigate('profile')"
+              @click="goTo('/profile')"
               class="w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-muted transition-colors"
             >
               <UserIcon class="size-4" /> Profile
@@ -36,7 +36,10 @@
               <SettingsIcon class="size-4" /> Settings
             </button>
             <hr class="border-border my-1" />
-            <button class="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-500 hover:bg-muted transition-colors">
+            <button
+              @click="handleLogout"
+              class="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-500 hover:bg-muted transition-colors"
+            >
               <LogOutIcon class="size-4" /> Logout
             </button>
           </div>
@@ -80,7 +83,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { RouterView, RouterLink, useRouter } from 'vue-router'
-import { useUserStore } from '../../stores/user'
+import { useAuthStore } from '@/stores/auth'
 import {
   LayoutDashboard as LayoutDashboardIcon,
   MessageCircle as MessageCircleIcon,
@@ -92,25 +95,38 @@ import {
   User as UserIcon,
 } from 'lucide-vue-next'
 
-const user = useUserStore()
+const auth = useAuthStore()
 const router = useRouter()
 const menuOpen = ref(false)
 const menuRef = ref<HTMLElement | null>(null)
 
+const displayName = computed(() => (auth.user?.name as string) ?? 'User')
+
 const initials = computed(() =>
-  user.profile.name.split(' ').map(n => n[0]).join('').toUpperCase()
+  displayName.value
+    .split(' ')
+    .map((n: string) => n[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2)
 )
 
 const navItems = [
-  { to: '/', label: 'Dashboard', icon: LayoutDashboardIcon },
+  { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboardIcon },
   { to: '/chat', label: 'Chat', icon: MessageCircleIcon },
   { to: '/books', label: 'Books', icon: BookOpenIcon },
-  { to: '/records', label: 'Records', icon: ActivityIcon },
+  { to: '/testing-records', label: 'Records', icon: ActivityIcon },
 ]
 
-function navigate(name: string) {
+function goTo(path: string) {
   menuOpen.value = false
-  router.push({ name })
+  router.push(path)
+}
+
+async function handleLogout() {
+  menuOpen.value = false
+  await auth.logout()
+  router.push('/login')
 }
 
 function handleClickOutside(e: MouseEvent) {
