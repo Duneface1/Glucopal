@@ -87,8 +87,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useUserStore } from '../stores/user'
+import { ref, computed,onMounted } from 'vue'
+import { useAuthStore } from '@/stores/auth';
+import axios from '@/lib/axios';
 import {
   Camera as CameraIcon,
   Edit2 as Edit2Icon,

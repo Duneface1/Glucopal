@@ -1,8 +1,7 @@
 <template>
   <div class="min-h-full bg-background">
     <div class="max-w-md mx-auto p-4 space-y-6">
-
-      <!-- Header -->
+            <!-- Header -->
       <div class="flex items-center justify-between pt-2">
         <div class="space-y-0.5">
           <h1 class="text-xl font-bold text-foreground">
@@ -10,10 +9,6 @@
           </h1>
           <p class="text-sm text-muted-foreground">{{ currentDate }}</p>
         </div>
-        <button @click="$router.push('/profile')"
-          class="size-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-sm">
-          {{ initials }}
-        </button>
       </div>
 
       <!-- Quick Stats -->
