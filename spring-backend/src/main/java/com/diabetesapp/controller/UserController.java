@@ -9,28 +9,25 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
     private final ChatService chatService;
 
-    /** Fetch User profile */
     @GetMapping("/{id}")
     public ResponseEntity<UserDto.Response> getProfile(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getProfile(id));
     }
 
-    /** Update User profile */
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/profile")
     public ResponseEntity<UserDto.Response> updateProfile(
             @PathVariable Long id,
             @Valid @RequestBody UserDto.UpdateRequest request) {
         return ResponseEntity.ok(userService.updateProfile(id, request));
     }
 
-    /** Proxy to Python AI service */
     @PostMapping("/{id}/chat")
     public ResponseEntity<UserDto.ChatResponse> chat(
             @PathVariable Long id,

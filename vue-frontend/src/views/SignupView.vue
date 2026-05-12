@@ -165,16 +165,14 @@ async function submitSignup() {
   loading.value = true
   error.value = ''
   try {
-    // ✅ Combine firstName + lastName into single `name` field for backend
     await axios.post('/auth/signup', {
       name: `${firstName.value.trim()} ${lastName.value.trim()}`.trim(),
       email: email.value,
       password: password.value,
       diabetesType: diabetesType.value || undefined,
     })
-    // Auto login after signup
     await auth.login({ email: email.value, password: password.value })
-    router.push('/dashboard')
+    router.push('/onboarding')
   } catch (e: any) {
     error.value = e?.response?.data?.error ?? e?.response?.data?.message ?? 'Something went wrong. Please try again.'
   } finally {

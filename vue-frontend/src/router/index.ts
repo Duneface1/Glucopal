@@ -6,6 +6,7 @@ const LoginView = () => import('@/views/LoginView.vue')
 const DashboardView = () => import('@/views/Dashboard.vue')
 const LandingView = () => import('@/views/LandingView.vue')
 const SignupView = () => import('@/views/SignupView.vue')
+const OnboardingView = () => import('@/views/Onboardingview.vue')
 const ProfileView = () => import('@/views/Profile.vue')
 const ChatView = () => import('@/views/Chat.vue')
 const BooksView = () => import('@/views/Books.vue')
@@ -22,6 +23,7 @@ const routes: RouteRecordRaw[] = [
   { path: '/', component: LandingView },
   { path: '/login', component: LoginView },
   { path: '/signup', component: SignupView },
+  { path: '/onboarding', component: OnboardingView, meta: { requiresAuth: true } },
   { path: '/dashboard', component: DashboardView, meta: { requiresAuth: true } },
   { path: '/profile', component: ProfileView, meta: { requiresAuth: true } },
   { path: '/chat', component: ChatView, meta: { requiresAuth: true } },
