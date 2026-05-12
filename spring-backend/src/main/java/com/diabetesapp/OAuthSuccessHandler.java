@@ -12,7 +12,6 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -34,24 +33,27 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         String email = oauthUser.getAttribute("email");
         String name  = oauthUser.getAttribute("name");
 
-        // Find or create the user
+        if (email == null) {
+            response.sendRedirect(allowedOriginsRaw.split(",")[0].trim() + "/login?error=no_email");
+            return;
+        }
+
         User user = userRepo.findByEmail(email).orElseGet(() -> {
             User newUser = new User();
             newUser.setEmail(email);
             newUser.setName(name != null ? name : email);
-            newUser.setPasswordHash(""); // no password for OAuth users
+            newUser.setPasswordHash(null);   // ✅ no password for OAuth users
+            newUser.setAuthProvider("google");
             return userRepo.save(newUser);
         });
 
-        // Generate real JWT
+        // Generate JWT
         String accessToken = jwtUtil.generateToken(user.getId(), user.getEmail());
 
-        // Redirect to Vue frontend with token as query param
-        // Vue will pick it up, store in auth store, then redirect to /onboarding or /dashboard
-        String frontendUrl = allowedOriginsRaw.split(",")[0].trim();
-        boolean isNewUser = user.getPhone() == null && user.getDiabetesType() == null;
+        boolean isNewUser = user.getDiabetesType() == null && user.getPhone() == null;
         String redirectPath = isNewUser ? "/onboarding" : "/dashboard";
 
+        String frontendUrl = allowedOriginsRaw.split(",")[0].trim();
         response.sendRedirect(frontendUrl + "/oauth-callback?token=" + accessToken + "&redirect=" + redirectPath);
     }
 }

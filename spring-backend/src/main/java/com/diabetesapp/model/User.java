@@ -24,8 +24,11 @@ public class User {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @NotBlank
+    @Column(nullable = true)
     private String passwordHash;
+
+    @Column(nullable = false)
+    private String authProvider = "local"; // "local", "google"
 
     private String phone;
 
