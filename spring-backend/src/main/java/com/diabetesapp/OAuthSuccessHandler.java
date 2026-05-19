@@ -42,7 +42,7 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
             User newUser = new User();
             newUser.setEmail(email);
             newUser.setName(name != null ? name : email);
-            newUser.setPasswordHash(null);   // ✅ no password for OAuth users
+            newUser.setPasswordHash(null);
             newUser.setAuthProvider("google");
             return userRepo.save(newUser);
         });
