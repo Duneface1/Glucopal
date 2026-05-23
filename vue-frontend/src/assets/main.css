@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 :root {
+  /* Default Light Theme */
   --background: #faf7f5;
   --foreground: #2d2d2d;
   --card: #ffffff;
@@ -12,15 +13,58 @@
   --muted: #f4ede8;
   --muted-foreground: #8b8b8b;
   --border: #ede8e3;
-  --btn :#008C8C;
+  --btn: #008C8C;
+
+  /* Universal Accessibility Defaults */
+  --app-font: system-ui, -apple-system, sans-serif;
+  --app-line-height: 1.5;
+  --app-letter-spacing: 0em;
+  --touch-target-padding: 7px 14px;
+  --touch-target-min-height: auto;
+}
+
+/* --- Dark Theme --- */
+:root[data-theme="dark"] {
+  --background: #121212;
+  --foreground: #e3e3e3;
+  --card: #1e1e1e;
+  --card-foreground: #e3e3e3;
+  --primary: #f0936c;
+  --primary-foreground: #121212;
+  --muted: #2a2a2a;
+  --muted-foreground: #a0a0a0;
+  --border: #333333;
+}
+
+/* --- High Contrast Mode (WCAG AAA Compliant True Black) --- */
+:root[data-high-contrast="true"] {
+  --background: #000000 !important;
+  --foreground: #ffffff !important;
+  --card: #000000 !important;
+  --card-foreground: #ffffff !important;
+  --border: #ffffff !important;
+  --muted: #1a1a1a !important;
+  --muted-foreground: #ffff00 !important; /* High-vis yellow for fine-print/descriptions */
+  --primary: #ffffff !important;
+  --primary-foreground: #000000 !important;
+}
+
+/* --- Interface Layout Adaptive Toggles --- */
+:root[data-target-size="large"] {
+  --touch-target-padding: 12px 20px;
+  --touch-target-min-height: 48px; /* Standard WCAG minimum tap region */
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--app-font);
+  line-height: var(--app-line-height);
+  letter-spacing: var(--app-letter-spacing);
+  transition: background-color 0.2s ease, color 0.2s ease, font-size 0.1s ease;
 }
 
+/* --- Tailwind Token Bridges --- */
 .bg-background { background-color: var(--background); }
 .bg-card { background-color: var(--card); }
 .bg-muted { background-color: var(--muted); }
@@ -38,6 +82,7 @@ body {
 .border-primary\/20 { border-color: color-mix(in srgb, var(--primary) 20%, transparent); }
 .border-primary\/30 { border-color: color-mix(in srgb, var(--primary) 30%, transparent); }
 
+/* --- Base Layout Components --- */
 .card {
   background-color: var(--card);
   border: 1px solid var(--border);
@@ -56,6 +101,57 @@ body {
   border: none;
 }
 .btn-primary:hover { opacity: 0.9; }
+
+/* --- Shared Control Layouts (Segmented Selectors, Toggles, Sliders) --- */
+.universal-segmented {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.universal-seg-btn {
+  padding: var(--touch-target-padding);
+  min-height: var(--touch-target-min-height);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--muted-foreground);
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.universal-seg-btn + .universal-seg-btn { border-left: 1px solid var(--border); }
+.universal-seg-btn.active { background: var(--primary); color: var(--primary-foreground); }
+.universal-seg-btn:not(.active):hover { background: var(--muted); color: var(--foreground); }
+
+.universal-toggle {
+  width: 44px;
+  height: 26px;
+  border-radius: 999px;
+  background: var(--border);
+  border: none;
+  cursor: pointer;
+  padding: 3px;
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+}
+.universal-toggle.on { background: var(--primary); }
+.universal-toggle-thumb {
+  display: block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.2s ease;
+}
+.universal-toggle.on .universal-toggle-thumb { transform: translateX(18px); }
 
 .size-4 { width: 1rem; height: 1rem; }
 .size-5 { width: 1.25rem; height: 1.25rem; }

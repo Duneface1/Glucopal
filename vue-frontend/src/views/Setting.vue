@@ -9,7 +9,6 @@
 
       <div class="settings-body">
 
-        <!-- Sidebar nav -->
         <nav class="settings-nav">
           <button
             v-for="section in sections"
@@ -23,69 +22,61 @@
           </button>
         </nav>
 
-        <!-- Content panels -->
         <div class="settings-content">
 
-          <!-- ══════════════════════════════════════
-               APPEARANCE
-          ══════════════════════════════════════ -->
           <section v-if="activeSection === 'appearance'" class="panel">
             <div class="panel-header">
               <h2>Appearance</h2>
               <p>Customise how the interface looks and feels</p>
             </div>
 
-            <!-- ── Theme & Contrast ── -->
             <div class="setting-group">
               <div class="group-title">Theme &amp; contrast</div>
 
-              <!-- Theme -->
               <div class="setting-row">
                 <div class="setting-info">
                   <span class="setting-label">Theme</span>
                   <span class="setting-desc">Reduce glare and eye strain with dark mode</span>
                 </div>
-                <div class="theme-toggle">
-                  <button class="theme-btn" :class="{ active: theme === 'light' }" @click="setTheme('light')">
+                <div class="universal-segmented">
+                  <button class="universal-seg-btn" :class="{ active: theme === 'light' }" @click="setTheme('light')">
                     <SunIcon class="btn-icon" /> Light
                   </button>
-                  <button class="theme-btn" :class="{ active: theme === 'dark' }" @click="setTheme('dark')">
+                  <button class="universal-seg-btn" :class="{ active: theme === 'dark' }" @click="setTheme('dark')">
                     <MoonIcon class="btn-icon" /> Dark
                   </button>
-                  <button class="theme-btn" :class="{ active: theme === 'system' }" @click="setTheme('system')">
+                  <button class="universal-seg-btn" :class="{ active: theme === 'system' }" @click="setTheme('system')">
                     <MonitorIcon class="btn-icon" /> System
                   </button>
                 </div>
               </div>
 
-              <!-- High contrast -->
               <div class="setting-row">
                 <div class="setting-info">
                   <span class="setting-label">High contrast</span>
                   <span class="setting-desc">Enforces 7:1 contrast ratio — true black background with white or yellow text</span>
                 </div>
                 <button
-                  class="toggle-switch"
+                  class="universal-toggle"
                   :class="{ on: highContrast }"
                   role="switch"
                   :aria-checked="highContrast"
                   @click="highContrast = !highContrast"
                 >
-                  <span class="toggle-thumb" />
+                  <span class="universal-toggle-thumb" />
                 </button>
               </div>
 
-              <!-- Color filter -->
               <div class="setting-row">
                 <div class="setting-info">
                   <span class="setting-label">Color blindness filter</span>
                   <span class="setting-desc">Adjusts the color palette for different types of color vision deficiency</span>
                 </div>
-                <div class="segmented">
+                <div class="universal-segmented">
                   <button
                     v-for="cf in colorFilters"
                     :key="cf.value"
-                    class="seg-btn"
+                    class="universal-seg-btn"
                     :class="{ active: colorFilter === cf.value }"
                     @click="colorFilter = cf.value"
                   >
@@ -95,11 +86,9 @@
               </div>
             </div>
 
-            <!-- ── Typography ── -->
             <div class="setting-group">
               <div class="group-title">Typography</div>
 
-              <!-- Font size slider -->
               <div class="setting-row setting-row--col">
                 <div class="setting-info">
                   <span class="setting-label">Font size scale</span>
@@ -121,17 +110,16 @@
                 </div>
               </div>
 
-              <!-- Font family -->
               <div class="setting-row">
                 <div class="setting-info">
                   <span class="setting-label">Font family</span>
                   <span class="setting-desc">Atkinson Hyperlegible has distinct character shapes that resist blurring</span>
                 </div>
-                <div class="segmented">
+                <div class="universal-segmented">
                   <button
                     v-for="ff in fontFamilies"
                     :key="ff.value"
-                    class="seg-btn"
+                    class="universal-seg-btn"
                     :class="{ active: fontFamily === ff.value }"
                     @click="fontFamily = ff.value"
                   >
@@ -140,17 +128,16 @@
                 </div>
               </div>
 
-              <!-- Line spacing -->
               <div class="setting-row">
                 <div class="setting-info">
                   <span class="setting-label">Line spacing</span>
                   <span class="setting-desc">Extra leading prevents letters from merging during blurred vision episodes</span>
                 </div>
-                <div class="segmented">
+                <div class="universal-segmented">
                   <button
                     v-for="ls in lineSpacings"
                     :key="ls.value"
-                    class="seg-btn"
+                    class="universal-seg-btn"
                     :class="{ active: lineSpacing === ls.value }"
                     @click="lineSpacing = ls.value"
                   >
@@ -159,17 +146,16 @@
                 </div>
               </div>
 
-              <!-- Letter spacing -->
               <div class="setting-row">
                 <div class="setting-info">
                   <span class="setting-label">Letter spacing</span>
                   <span class="setting-desc">Wider tracking gives each character more visual separation</span>
                 </div>
-                <div class="segmented">
+                <div class="universal-segmented">
                   <button
                     v-for="ls in letterSpacings"
                     :key="ls.value"
-                    class="seg-btn"
+                    class="universal-seg-btn"
                     :class="{ active: letterSpacing === ls.value }"
                     @click="letterSpacing = ls.value"
                   >
@@ -179,21 +165,19 @@
               </div>
             </div>
 
-            <!-- ── Interface Layout ── -->
             <div class="setting-group">
               <div class="group-title">Interface layout</div>
 
-              <!-- Touch target size -->
               <div class="setting-row">
                 <div class="setting-info">
                   <span class="setting-label">Touch target size</span>
                   <span class="setting-desc">Large targets (48×48 dp minimum) help users relying on peripheral vision</span>
                 </div>
-                <div class="segmented">
+                <div class="universal-segmented">
                   <button
                     v-for="ts in targetSizes"
                     :key="ts.value"
-                    class="seg-btn"
+                    class="universal-seg-btn"
                     :class="{ active: targetSize === ts.value }"
                     @click="targetSize = ts.value"
                   >
@@ -202,37 +186,34 @@
                 </div>
               </div>
 
-              <!-- Layout density -->
               <div class="setting-row">
                 <div class="setting-info">
                   <span class="setting-label">Layout density</span>
                   <span class="setting-desc">Single-column view aids screen readers and central vision loss navigation</span>
                 </div>
-                <div class="segmented">
-                  <button class="seg-btn" :class="{ active: layoutDensity === 'default' }" @click="layoutDensity = 'default'">Default</button>
-                  <button class="seg-btn" :class="{ active: layoutDensity === 'simplified' }" @click="layoutDensity = 'simplified'">Simplified</button>
+                <div class="universal-segmented">
+                  <button class="universal-seg-btn" :class="{ active: layoutDensity === 'default' }" @click="layoutDensity = 'default'">Default</button>
+                  <button class="universal-seg-btn" :class="{ active: layoutDensity === 'simplified' }" @click="layoutDensity = 'simplified'">Simplified</button>
                 </div>
               </div>
 
-              <!-- Magnification lens -->
               <div class="setting-row">
                 <div class="setting-info">
                   <span class="setting-label">Magnification lens</span>
                   <span class="setting-desc">Hover or tap a card to magnify it without zooming the whole screen</span>
                 </div>
                 <button
-                  class="toggle-switch"
+                  class="universal-toggle"
                   :class="{ on: magLens }"
                   role="switch"
                   :aria-checked="magLens"
                   @click="magLens = !magLens"
                 >
-                  <span class="toggle-thumb" />
+                  <span class="universal-toggle-thumb" />
                 </button>
               </div>
             </div>
 
-            <!-- Preview chip -->
             <div class="preview-strip">
               <span class="preview-label">Preview</span>
               <p class="preview-text">
@@ -242,9 +223,6 @@
 
           </section>
 
-          <!-- ══════════════════════════════════════
-               PROFILE
-          ══════════════════════════════════════ -->
           <section v-if="activeSection === 'profile'" class="panel">
             <div class="panel-header">
               <h2>Profile</h2>
@@ -269,9 +247,6 @@
             </div>
           </section>
 
-          <!-- ══════════════════════════════════════
-               NOTIFICATIONS
-          ══════════════════════════════════════ -->
           <section v-if="activeSection === 'notifications'" class="panel">
             <div class="panel-header">
               <h2>Notifications</h2>
@@ -284,21 +259,18 @@
                   <span class="setting-desc">{{ notif.desc }}</span>
                 </div>
                 <button
-                  class="toggle-switch"
+                  class="universal-toggle"
                   :class="{ on: notif.enabled }"
                   role="switch"
                   :aria-checked="notif.enabled"
                   @click="notif.enabled = !notif.enabled"
                 >
-                  <span class="toggle-thumb" />
+                  <span class="universal-toggle-thumb" />
                 </button>
               </div>
             </div>
           </section>
 
-          <!-- ══════════════════════════════════════
-               SECURITY
-          ══════════════════════════════════════ -->
           <section v-if="activeSection === 'security'" class="panel">
             <div class="panel-header">
               <h2>Security</h2>
@@ -330,7 +302,7 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue'
+import { ref, watch } from 'vue'
 
 /* ── Inline icon components ── */
 const PaletteIcon  = { template: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>` }
@@ -457,11 +429,8 @@ watch(layoutDensity, (val) => {
 /* Magnification lens */
 const magLens = ref(false)
 
-/* ══════════════════════════════════════
-   OTHER PANELS STATE
-══════════════════════════════════════ */
+/* ── Other panels state ── */
 const profile = ref({ name: '', email: '', bio: '' })
-
 const notifications = ref([
   { id: 'email',   label: 'Email alerts',       desc: 'Receive updates via email',          enabled: true  },
   { id: 'push',    label: 'Push notifications', desc: 'In-app alerts for activity',         enabled: true  },
@@ -471,22 +440,11 @@ const notifications = ref([
 </script>
 
 <style scoped>
-/* ══ SVG filter defs for CVD simulation ══
-   Injected as a hidden element; filter IDs referenced via url(#...) */
-.cvd-filters { position: absolute; width: 0; height: 0; overflow: hidden; }
-
+/* Only structural context, spacing layouts, and containers are left here */
 .settings-page {
   min-height: 100vh;
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: var(--app-font, 'DM Sans', system-ui, sans-serif);
-  font-size: inherit;
-  line-height: var(--app-line-height, 1.5);
-  letter-spacing: var(--app-letter-spacing, 0em);
   padding: 2.5rem 1.5rem;
-  transition: background-color 0.2s ease, color 0.2s ease;
 }
-
 .settings-container { max-width: 900px; margin: 0 auto; }
 
 /* ── Header ── */
@@ -498,7 +456,6 @@ const notifications = ref([
 .settings-header h1 {
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--foreground);
   margin: 0 0 0.25rem;
 }
 .subtitle { font-size: 0.875rem; color: var(--muted-foreground); margin: 0; }
@@ -533,7 +490,7 @@ const notifications = ref([
 }
 .nav-icon { width: 16px; height: 16px; flex-shrink: 0; }
 
-/* ── Panel shell ── */
+/* ── Panel Shell ── */
 .settings-content { flex: 1; min-width: 0; }
 
 .panel {
@@ -550,13 +507,11 @@ const notifications = ref([
   font-size: 1rem;
   font-weight: 600;
   margin: 0 0 0.2rem;
-  color: var(--foreground);
 }
 .panel-header p { font-size: 0.8125rem; color: var(--muted-foreground); margin: 0; }
 
-/* ── Group title ── */
+/* ── Grouping ── */
 .setting-group { padding: 0.25rem 0; }
-
 .group-title {
   font-size: 0.7rem;
   font-weight: 600;
@@ -565,12 +520,9 @@ const notifications = ref([
   color: var(--muted-foreground);
   padding: 0.875rem 1.5rem 0.25rem;
 }
+.setting-group + .setting-group { border-top: 1px solid var(--border); }
 
-.setting-group + .setting-group {
-  border-top: 1px solid var(--border);
-}
-
-/* ── Setting rows ── */
+/* ── Rows ── */
 .setting-row {
   display: flex;
   align-items: center;
@@ -580,70 +532,15 @@ const notifications = ref([
   flex-wrap: wrap;
 }
 .setting-row + .setting-row { border-top: 1px solid var(--border); }
-
 .setting-row--col { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
 
 .setting-info { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
-.setting-label { font-size: 0.875rem; font-weight: 500; color: var(--foreground); }
+.setting-label { font-size: 0.875rem; font-weight: 500; }
 .setting-desc  { font-size: 0.8rem; color: var(--muted-foreground); line-height: 1.45; }
-
-/* ── Theme toggle ── */
-.theme-toggle {
-  display: flex;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-.theme-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 14px;
-  font-size: 0.8125rem;
-  font-weight: 500;
-  border: none;
-  background: none;
-  cursor: pointer;
-  color: var(--muted-foreground);
-  transition: background 0.15s, color 0.15s;
-  white-space: nowrap;
-}
-.theme-btn.active { background: var(--primary); color: var(--primary-foreground); }
-.theme-btn:not(.active):hover { background: var(--muted); color: var(--foreground); }
 .btn-icon { width: 14px; height: 14px; }
 
-/* ── Segmented control ── */
-.segmented {
-  display: flex;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  overflow: hidden;
-  flex-shrink: 0;
-  flex-wrap: wrap;
-}
-.seg-btn {
-  padding: 7px 14px;
-  font-size: 0.8125rem;
-  font-weight: 500;
-  border: none;
-  background: none;
-  cursor: pointer;
-  color: var(--muted-foreground);
-  transition: background 0.15s, color 0.15s;
-  white-space: nowrap;
-}
-.seg-btn + .seg-btn { border-left: 1px solid var(--border); }
-.seg-btn.active { background: var(--primary); color: var(--primary-foreground); }
-.seg-btn:not(.active):hover { background: var(--muted); color: var(--foreground); }
-
-/* ── Range slider ── */
-.slider-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-}
+/* ── Slider Row ── */
+.slider-row { display: flex; align-items: center; gap: 10px; width: 100%; }
 .range-input { flex: 1; cursor: pointer; accent-color: var(--primary); }
 .slider-label { font-size: 0.8rem; color: var(--muted-foreground); white-space: nowrap; }
 .slider-value {
@@ -653,29 +550,6 @@ const notifications = ref([
   min-width: 42px;
   text-align: right;
 }
-
-/* ── Toggle switch ── */
-.toggle-switch {
-  width: 44px;
-  height: 26px;
-  border-radius: 999px;
-  background: var(--border);
-  border: none;
-  cursor: pointer;
-  padding: 3px;
-  flex-shrink: 0;
-  transition: background 0.2s ease;
-}
-.toggle-switch.on { background: var(--primary); }
-.toggle-thumb {
-  display: block;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #fff;
-  transition: transform 0.2s ease;
-}
-.toggle-switch.on .toggle-thumb { transform: translateX(18px); }
 
 /* ── Preview strip ── */
 .preview-strip {
@@ -696,81 +570,31 @@ const notifications = ref([
 .preview-text {
   margin: 0;
   font-size: 1rem;
-  color: var(--foreground);
-  font-family: var(--app-font, inherit);
-  line-height: var(--app-line-height, 1.5);
-  letter-spacing: var(--app-letter-spacing, 0em);
 }
 
-/* ── Form fields ── */
+/* ── Form Fields ── */
 .field-row { display: flex; flex-direction: column; gap: 6px; padding: 1rem 1.5rem; }
 .field-row + .field-row { border-top: 1px solid var(--border); }
-.field-label { font-size: 0.8125rem; font-weight: 500; color: var(--foreground); }
+.field-label { font-size: 0.8125rem; font-weight: 500; }
 .field-input {
   width: 100%;
   padding: 9px 12px;
   font-size: 0.875rem;
-  color: var(--foreground);
   background: var(--background);
   border: 1px solid var(--border);
   border-radius: 8px;
   outline: none;
   transition: border-color 0.15s;
   box-sizing: border-box;
-  font-family: inherit;
 }
 .field-input:focus { border-color: var(--primary); }
 .field-textarea { resize: vertical; min-height: 80px; }
-
-/* ── Actions ── */
 .panel-actions { padding: 1rem 1.5rem; border-top: 1px solid var(--border); }
-.btn-primary {
-  background: var(--primary);
-  color: var(--primary-foreground);
-  border: none;
-  border-radius: 8px;
-  padding: 9px 20px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: opacity 0.15s;
-  font-family: inherit;
-}
-.btn-primary:hover { opacity: 0.88; }
 
 /* ── Responsive ── */
 @media (max-width: 640px) {
   .settings-body { flex-direction: column; }
   .settings-nav { flex-direction: row; flex-wrap: wrap; min-width: unset; width: 100%; }
   .nav-item { flex: 1; justify-content: center; min-width: 72px; }
-  .theme-toggle, .segmented { flex-wrap: wrap; }
 }
 </style>
-
-<template>
-  <svg class="cvd-filters" aria-hidden="true" focusable="false">
-    <defs>
-      <filter id="protan">
-        <feColorMatrix type="matrix" values="
-          0.567 0.433 0     0 0
-          0.558 0.442 0     0 0
-          0     0.242 0.758 0 0
-          0     0     0     1 0"/>
-      </filter>
-      <filter id="deutan">
-        <feColorMatrix type="matrix" values="
-          0.625 0.375 0     0 0
-          0.7   0.3   0     0 0
-          0     0.3   0.7   0 0
-          0     0     0     1 0"/>
-      </filter>
-      <filter id="tritan">
-        <feColorMatrix type="matrix" values="
-          0.95  0.05  0     0 0
-          0     0.433 0.567 0 0
-          0     0.475 0.525 0 0
-          0     0     0     1 0"/>
-      </filter>
-    </defs>
-  </svg>
-</template>

@@ -32,7 +32,9 @@
             >
               <UserIcon class="size-4" /> Profile
             </button>
-            <button class="w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-muted transition-colors">
+            <button
+              @click="goTo('/setting')"
+              class="w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-muted transition-colors">
               <SettingsIcon class="size-4" /> Settings
             </button>
             <hr class="border-border my-1" />
