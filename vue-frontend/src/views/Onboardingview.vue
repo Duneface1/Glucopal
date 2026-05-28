@@ -379,7 +379,10 @@ function onLocationKeydown(e: KeyboardEvent) {
     locationListRef.value?.children[locationActiveIndex.value]?.scrollIntoView({ block: 'nearest' })
   } else if (e.key === 'Enter' && locationActiveIndex.value >= 0) {
     e.preventDefault()
-    selectLocation(locationResults.value[locationActiveIndex.value])
+    const selected = locationResults.value[locationActiveIndex.value]
+        if (selected) {
+        electLocation(selected)
+      }
   } else if (e.key === 'Escape') {
     locationOpen.value = false
   }
