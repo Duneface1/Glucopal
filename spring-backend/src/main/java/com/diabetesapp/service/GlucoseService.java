@@ -1,3 +1,6 @@
+
+package com.diabetesapp.service;
+
 import com.diabetesapp.dto.GlucoseRecordDto;
 import com.diabetesapp.model.GlucoseRecord;
 import com.diabetesapp.model.User;
@@ -24,7 +27,7 @@ public class GlucoseService {
     @Value("${PYTHON_SERVICE_URL:http://localhost:8000}")
     private String pythonServiceUrl;
 
-    // ── Analytics helpers ──────────────────────────────────────────
+
     public String getGlucoseAnalytics(Long userId) {
         String url = pythonServiceUrl + "/analytics/glucose/" + userId;
         return restTemplate.getForObject(url, String.class);
@@ -103,3 +106,4 @@ public class GlucoseService {
         return stats;
     }
 }
+
