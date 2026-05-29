@@ -41,6 +41,7 @@ public class GlucoseService {
 
     @Autowired
     String analytics = analyticsService.getGlucoseAnalytics(userId);
+
     @Transactional(readOnly = true)
     public List<GlucoseRecordDto.Response> getAllReadings(Long userId) {
         return glucoseRepo.findByUserIdOrderByRecordedAtDesc(userId)
