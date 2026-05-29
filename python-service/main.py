@@ -12,7 +12,11 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:8080"],
+    allow_origins=[
+        "http://localhost:5173",
+        "http://localhost:8080",
+        "https://glucopal.vercel.app"  # add this
+    ],
     allow_methods=["*"],
     allow_headers=["*"],
 )
