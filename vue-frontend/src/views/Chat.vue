@@ -126,7 +126,9 @@ async function handleSend() {
   isTyping.value = true
 
   try {
-    const response = await fetch('/api/users/1/chat', {
+    const apiUrl = import.meta.env.VITE_API_URL
+    const userId = localStorage.getItem('userId') || '1'
+    const response = await fetch(`${apiUrl}/api/users/${userId}/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message: userMessage }),
