@@ -38,7 +38,6 @@ public class GlucoseService {
         return restTemplate.getForObject(url, String.class);
     }
 
-    // ── Existing methods ───────────────────────────────────────────
     @Transactional
     public GlucoseRecordDto.Response addReading(Long userId, GlucoseRecordDto.Request req) {
         User user = userRepo.findById(userId)
