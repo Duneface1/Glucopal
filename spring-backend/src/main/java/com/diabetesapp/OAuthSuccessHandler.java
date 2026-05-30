@@ -20,8 +20,8 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
     private final UserRepository userRepo;
     private final JwtUtil jwtUtil;
 
-    @Value("${cors.allowed-origins:http://localhost:5173}")
-    private String allowedOriginsRaw;
+    @Value("${app.frontend-url:http://localhost:5173}")
+    private String frontendUrl;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -34,7 +34,8 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         String name  = oauthUser.getAttribute("name");
 
         if (email == null) {
-            response.sendRedirect(allowedOriginsRaw.split(",")[0].trim() + "/login?error=no_email");
+            response.sendRedirect(frontendUrl + "/oauth-callback?token=" + accessToken + "&redirect=" + redirectPath);
+
             return;
         }
 
