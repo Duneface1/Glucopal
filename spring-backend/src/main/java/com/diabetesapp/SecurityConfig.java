@@ -45,7 +45,6 @@ public class SecurityConfig {
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/oauth2/**").permitAll()
                 .requestMatchers("/login/oauth2/**").permitAll()
-                .requestMatchers("/saml2/**").permitAll()
                 .anyRequest().authenticated()
             )
 
