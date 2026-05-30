@@ -2,6 +2,7 @@ FROM maven:3.9-eclipse-temurin-21
 WORKDIR /app
 COPY pom.xml .
 RUN mvn dependency:go-offline -B
+ARG CACHEBUST=1
 COPY src ./src
 RUN mvn clean package -DskipTests -B
 EXPOSE 8080
