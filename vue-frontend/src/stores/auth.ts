@@ -22,36 +22,51 @@ interface AuthResponse {
 }
 
 export const useAuthStore = defineStore('auth', () => {
-  const accessToken = ref<string | null>(null)
-  const user = ref<AuthUser | null>(null)
+  const accessToken = ref<string | null>(localStorage.getItem('accessToken'))
+  const user = ref<AuthUser | null>(JSON.parse(localStorage.getItem('user') || 'null'))
   const mfaPending = ref<boolean>(false)
   const mfaSessionToken = ref<string | null>(null)
 
   const isAuthenticated = computed(() => !!accessToken.value && !mfaPending.value)
   const requiresMfa = computed(() => mfaPending.value)
 
+  function setAuth(token: string, userData: AuthUser) {
+    accessToken.value = token
+    user.value = userData
+    localStorage.setItem('accessToken', token)
+    localStorage.setItem('user', JSON.stringify(userData))
+    localStorage.setItem('userId', String(userData.id))
+  }
+
+  function clearAuth() {
+    accessToken.value = null
+    user.value = null
+    mfaPending.value = false
+    mfaSessionToken.value = null
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('user')
+    localStorage.removeItem('userId')
+  }
+
   async function init(): Promise<void> {
+    if (!accessToken.value) return
     try {
-      const { data } = await axios.post<AuthResponse>('/auth/refresh')
-      accessToken.value = data.accessToken
-      user.value = data.user
+      const { data } = await axios.get<AuthUser>('/auth/me')
+      user.value = data
+      localStorage.setItem('user', JSON.stringify(data))
     } catch {
-      accessToken.value = null
-      user.value = null
+      clearAuth()
     }
   }
 
   async function login(credentials: LoginCredentials): Promise<{ mfaRequired: boolean }> {
     const { data } = await axios.post<AuthResponse>('/auth/login', credentials)
-
     if (data.mfaRequired) {
       mfaPending.value = true
       mfaSessionToken.value = data.mfaSessionToken ?? null
       return { mfaRequired: true }
     }
-
-    accessToken.value = data.accessToken
-    user.value = data.user
+    setAuth(data.accessToken, data.user)
     return { mfaRequired: false }
   }
 
@@ -60,26 +75,19 @@ export const useAuthStore = defineStore('auth', () => {
       code,
       mfaSessionToken: mfaSessionToken.value,
     })
-    accessToken.value = data.accessToken
-    user.value = data.user
+    setAuth(data.accessToken, data.user)
     mfaPending.value = false
     mfaSessionToken.value = null
   }
 
-  async function handleOAuthCallback(
-    code: string,
-    provider: string
-  ): Promise<{ mfaRequired: boolean }> {
+  async function handleOAuthCallback(code: string, provider: string): Promise<{ mfaRequired: boolean }> {
     const { data } = await axios.post<AuthResponse>('/auth/oauth/callback', { code, provider })
-
     if (data.mfaRequired) {
       mfaPending.value = true
       mfaSessionToken.value = data.mfaSessionToken ?? null
       return { mfaRequired: true }
     }
-
-    accessToken.value = data.accessToken
-    user.value = data.user
+    setAuth(data.accessToken, data.user)
     return { mfaRequired: false }
   }
 
@@ -87,20 +95,9 @@ export const useAuthStore = defineStore('auth', () => {
     window.location.href = `${import.meta.env.VITE_API_URL}/oauth2/authorization/${provider}`
   }
 
-  async function handleSamlCallback(): Promise<void> {
-    const { data } = await axios.post<AuthResponse>('/auth/saml/callback')
-    accessToken.value = data.accessToken
-    user.value = data.user
-  }
-
-  function redirectToSaml(): void {
-    window.location.href = `${import.meta.env.VITE_API_URL}/saml2/authenticate/default`
-  }
-
   async function refreshToken(): Promise<string> {
     const { data } = await axios.post<AuthResponse>('/auth/refresh')
-    accessToken.value = data.accessToken
-    user.value = data.user
+    setAuth(data.accessToken, data.user)
     return data.accessToken
   }
 
@@ -108,10 +105,7 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       await axios.post('/auth/logout')
     } finally {
-      accessToken.value = null
-      user.value = null
-      mfaPending.value = false
-      mfaSessionToken.value = null
+      clearAuth()
     }
   }
 
@@ -126,8 +120,6 @@ export const useAuthStore = defineStore('auth', () => {
     verifyMfa,
     handleOAuthCallback,
     redirectToOAuth,
-    handleSamlCallback,
-    redirectToSaml,
     refreshToken,
     logout,
   }
