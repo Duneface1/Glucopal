@@ -16,6 +16,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+import static org.springframework.security.config.Customizer.withDefaults;
 
 import java.util.List;
 
@@ -30,9 +32,26 @@ public class SecurityConfig {
     private String allowedOriginsRaw;
 
     @Bean
+    public CorsFilter corsFilter() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.setAllowedOrigins(List.of("http://localhost:5173","http://localhost:3000","https://glucopal-peach.vercel.app"
+    ));
+
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        config.setExposedHeaders(List.of("Authorization"));
+        config.setMaxAge(3600L);
+
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", config);
+    return new CorsFilter(source);
+}
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .cors(withDefaults())
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(s -> s
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
